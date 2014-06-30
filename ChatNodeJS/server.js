@@ -21,4 +21,41 @@ function sendFile(response, filePath, fileContents) {
 	);
 }
 
-function 
+function serverStatic(response, cache, absPath) {
+	if (cache[absPat]) {
+		sendFile(response, absPath, cache[absPath]);
+	}
+	else {
+		fs.exists(absPath, function(exists) {
+			if (exists) {
+				fs.readFile(absPath, function(err, data) {
+					if (err) {
+						send404(response);
+					}
+					else {
+						cache[absPath] = data;
+						sendFile(response, absPath, data);
+					}
+				});
+			}
+			else {
+				send404(response);
+			}
+		});
+	}
+}
+
+var server = http.createServer(function(request,response) {
+	var filePath = false;
+	if (request.url == '/') {
+		filePath = 'public/index.html';
+	}
+	else {
+		filePath = 'public' + request.url;
+	}
+	var absPath = './' + filePath;
+	serveStatic(response, cache, absPath);
+});
+server.listen(3000, function() {
+	console.log("Server listening on port 3000.");
+});
