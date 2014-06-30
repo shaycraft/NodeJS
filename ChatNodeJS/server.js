@@ -21,7 +21,7 @@ function sendFile(response, filePath, fileContents) {
 	);
 }
 
-function serverStatic(response, cache, absPath) {
+function serveStatic(response, cache, absPath) {
 	if (cache[absPat]) {
 		sendFile(response, absPath, cache[absPath]);
 	}
