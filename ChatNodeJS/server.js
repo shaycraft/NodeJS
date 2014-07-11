@@ -25,12 +25,11 @@ function sendFile(response, filePath, fileContents) {
 
 function serveStatic(response, cache, absPath) {
 	if (cache[absPath]) {
-		console.log('found in cache');
+		console.log('found in cache, path = ' + absPath);
 		sendFile(response, absPath, cache[absPath]);
 	}
 	else {
-		console.log('not in cache');
-		console.log('absPath = ' + absPath);
+		console.log('not in cache, path = ' + absPath);
 		fs.exists(absPath, function(exists) {
 			if (exists) {
 				fs.readFile(absPath, function(err, data) {
