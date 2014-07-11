@@ -8,8 +8,8 @@ var path = require('path');
 var mime = require('mime');
 var cache = {};
 
-function send404(response){
-	console.log('sending 404');
+function send404(response, path){
+	console.log('sending 404, ' + path);
 	response.writeHead(404, {'Content-Type': 'text/plain'});
 	response.write('Error 404: resource not found you fucking asshole');
 	response.end();
@@ -35,7 +35,7 @@ function serveStatic(response, cache, absPath) {
 			if (exists) {
 				fs.readFile(absPath, function(err, data) {
 					if (err) {
-						send404(response);
+						send404(response, absPath);
 					}
 					else {
 						cache[absPath] = data;
@@ -44,7 +44,7 @@ function serveStatic(response, cache, absPath) {
 				});
 			}
 			else {
-				send404(response);
+				send404(response, absPath);
 			}
 		});
 	}
