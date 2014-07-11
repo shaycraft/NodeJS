@@ -17,7 +17,7 @@ exports.listen = function(server) {
 		joinRoom(socket, 'Lobby');
 		
 		handleMessageBroadcasting(socket, nickNames);
-		handleNameChangeAttempts(socket, nickNames, namesUsed);
+		handleNameChangedAttempts(socket, nickNames, namesUsed);
 		
 		socket.on('rooms', function() {
 			socket.emit('rooms', io.sockets.manager.rooms);
@@ -64,7 +64,7 @@ function joinRoom(socket, room) {
 	}
 }
 
-function handleNameChagedAttempts(socket, nickNames, namesUsed) {
+function handleNameChangedAttempts(socket, nickNames, namesUsed) {
 	socket.on('nameAttempt', function(name) {
 		if (name.indexOf('Guest') == 0) {
 			socket.emit('nameResult', {
@@ -75,7 +75,7 @@ function handleNameChagedAttempts(socket, nickNames, namesUsed) {
 		else {
 			if (namesUsed.indexOf(name) == -1) {
 				var previousName = nickNames[socket.id];
-				var previousNameIndex = namesUsed.IndexOf(previousName);
+				var previousNameIndex = namesUsed.indexOf(previousName);
 				namesUsed.push(name);
 				nickNames[socket.id] = name;
 				delete namesUsed[previousNameIndex];
@@ -83,7 +83,7 @@ function handleNameChagedAttempts(socket, nickNames, namesUsed) {
 					success: true,
 					name: name
 				});
-				socket.broadcast.to(currentRoome[socket.id]).emit('message', {
+				socket.broadcast.to(currentRoom[socket.id]).emit('message', {
 					text: previousName + ' is now known as ' + name + '.'
 				});
 			}
